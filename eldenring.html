@@ -25,8 +25,9 @@
             }
 
             // Clear the data box
-                function clearBox() {
-                document.getElementById("Data").innerHTML = "<p>Data</p>";
+            function clearBox( route ) {
+                route = route.split("?")[0];
+                document.getElementById("Data").innerHTML = "<p>" + route + "</p>";
             }
 
             // Generate original HTML
@@ -40,7 +41,7 @@
 
             // Get the boses and loop through the resultjs
             async function get_api_route( route ) {
-                clearBox();
+                clearBox( route );
                 // Call the rest API
                 let response = await call_elden_ring_api(route);
                 path_data( response, route );
@@ -50,18 +51,43 @@
             async function path_data( api_data, route ) {
                 len = api_data.count;
                 for (i = 0; i < len; i++) {
-                    // Set variables
+                    // Find the name, image, and id of the elem
                     elem_name = api_data.data[i].name;
                     elem_img = api_data.data[i].image;
                     elem_id = api_data.data[i].id;
-                    elem_description = api_data.data[i].description;
                     div_id = elem_name + "_data";
                     // Write the initial data for the elem
                     document.getElementById("Data").innerHTML += "<div id='" + elem_name + "' onclick='visibility_toggle(\"" + div_id + "\")' style=\"color:blue;\"><u>" + elem_name + "</u> <img height=100 width=100 src="+ elem_img + "></br></div>";
                     document.getElementById("Data").innerHTML += "<div id=\"" + div_id + "\"></div>";
                     document.getElementById(div_id).style.display = "none";
                     // Write detailed data for the elem
-                    document.getElementById(div_id).innerHTML = "<p>" + elem_description + "</p>";
+                    details_dict = JSON.parse(JSON.stringify(api_data.data[i]));
+                    for (var key in details_dict) {
+                        if (key != "id" && key != "name" && key != "image") {
+                            elem_detail = details_dict[key];
+                            if (typeof elem_detail == "object" && elem_detail != null) {
+                               console.log(elem_detail); 
+                               elem_detail.forEach(display_elems);
+                            }
+                            else {
+                                document.getElementById(div_id).innerHTML += "<p>" + key + ": " + elem_detail + "</p>";
+                            }
+                        }
+                    }
+                }
+            }
+
+            function display_elems(item, index) {
+                // console.log(index + ": " + item);
+                if (typeof item == "object") {
+                    document.getElementById(div_id).innerHTML += "<p>";
+                    for(var key in item) {
+                        document.getElementById(div_id).innerHTML += item[key] + " ";
+                    }
+                    document.getElementById(div_id).innerHTML += "</p>";
+                }
+                else {
+                    document.getElementById(div_id).innerHTML += "<p>Item Drop " + (index + 1) + ": " + item + "</p>";
                 }
             }
 
