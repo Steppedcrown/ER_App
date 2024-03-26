@@ -5,7 +5,7 @@
             // Global Vairbales
             var data_paths = ["ammos", "armors", "ashes", "bosses", "classes", "creatures", "incantations", "items", "locations", "npcs", "shields", "sorceries", "spirits", "talismans", "weapons"];
 
-            function call_eldon_ring_api( api_route ) {
+            function call_elden_ring_api( api_route ) {
                 return new Promise(function (resolve, reject) {
                     const xhr = new XMLHttpRequest();
                     xhr.open('GET', 'https://eldenring.fanapis.com/api/' + api_route);
@@ -42,7 +42,7 @@
             async function get_api_route( route ) {
                 clearBox();
                 // Call the rest API
-                let response = await call_eldon_ring_api(route);
+                let response = await call_elden_ring_api(route);
                 path_data( response, route );
             }
             
