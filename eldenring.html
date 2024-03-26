@@ -1,0 +1,81 @@
+<html>
+    <head>
+        <script type=""javascript">
+
+            // Global Vairbales
+            var data_paths = ["ammos", "armors", "ashes", "bosses", "classes", "creatures", "incantations", "items", "locations", "npcs", "shields", "sorceries", "spirits", "talismans", "weapons"];
+
+            function call_eldon_ring_api( api_route ) {
+                return new Promise(function (resolve, reject) {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', 'https://eldenring.fanapis.com/api/' + api_route);
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            const data = JSON.parse(xhr.responseText);
+                            resolve(data);
+                        } else {
+                            console.error(`Error: ${xhr.status}`);
+                        }
+                    };
+                    xhr.onerror = function() {
+                        console.error('Request error');
+                    };
+                    xhr.send();
+                });
+            }
+
+            // Clear the data box
+                function clearBox() {
+                document.getElementById("Data").innerHTML = "<p>Data</p>";
+            }
+
+            // Generate original HTML
+            function original_html() {
+                document.getElementById("main").innerHTML += "<div class='split' style='flex: 1;' id='ApiPaths'> <p>Api Paths</p></div>";
+                document.getElementById("main").innerHTML += "<div class='split' style='flex: 1;' id='Data'> <p>Data</p></div>";
+                for (i = 0; i < data_paths.length; i++) {
+                    document.getElementById("ApiPaths").innerHTML += "<p><a href='#' onclick='get_api_route(\"" + data_paths[i] + "?limit=10000\")'>" + data_paths[i] + ".</a></p>";
+                }
+            }
+
+            // Get the boses and loop through the resultjs
+            async function get_api_route( route ) {
+                clearBox();
+                // Call the rest API
+                let response = await call_eldon_ring_api(route);
+                path_data( response, route );
+            }
+            
+            //Write the data of each api path and each elem of the path
+            async function path_data( api_data, route ) {
+                len = api_data.count;
+                for (i = 0; i < len; i++) {
+                    // Set variables
+                    elem_name = api_data.data[i].name;
+                    elem_img = api_data.data[i].image;
+                    elem_id = api_data.data[i].id;
+                    elem_description = api_data.data[i].description;
+                    div_id = elem_name + "_data";
+                    // Write the initial data for the elem
+                    document.getElementById("Data").innerHTML += "<div id='" + elem_name + "' onclick='visibility_toggle(\"" + div_id + "\")'>" + elem_name + " <img height=100 width=100 src="+ elem_img + "></br></div>";
+                    document.getElementById("Data").innerHTML += "<div id=\"" + div_id + "\"></div>";
+                    document.getElementById(div_id).style.display = "none";
+                    // Write detailed data for the elem
+                    document.getElementById(div_id).innerHTML = "<p>" + elem_description + "</p>";
+                }
+            }
+
+            // Toggle the visibility of the element
+            function visibility_toggle( div_id ) {
+                if (document.getElementById(div_id).style.display == "none") {
+                    document.getElementById(div_id).style.display = "block";
+                } else {
+                    document.getElementById(div_id).style.display = "none";
+                }
+            }
+
+        </script>
+    </head>
+    <body style="display: flex;" id="main" onload="original_html()">
+    </body>
+</html>
