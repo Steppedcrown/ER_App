@@ -34,7 +34,7 @@
                 document.getElementById("main").innerHTML += "<div class='split' style='flex: 1;' id='ApiPaths'> <p>Api Paths</p></div>";
                 document.getElementById("main").innerHTML += "<div class='split' style='flex: 1;' id='Data'> <p>Data</p></div>";
                 for (i = 0; i < data_paths.length; i++) {
-                    document.getElementById("ApiPaths").innerHTML += "<p><a href='#' onclick='get_api_route(\"" + data_paths[i] + "?limit=10000\")'>" + data_paths[i] + ".</a></p>";
+                    document.getElementById("ApiPaths").innerHTML += "<p onclick='get_api_route(\"" + data_paths[i] + "?limit=10000\")' style=\"color:blue;\"><u>" + data_paths[i] + ".</u></p>";
                 }
             }
 
@@ -57,7 +57,7 @@
                     elem_description = api_data.data[i].description;
                     div_id = elem_name + "_data";
                     // Write the initial data for the elem
-                    document.getElementById("Data").innerHTML += "<div id='" + elem_name + "' onclick='visibility_toggle(\"" + div_id + "\")'>" + elem_name + " <img height=100 width=100 src="+ elem_img + "></br></div>";
+                    document.getElementById("Data").innerHTML += "<div id='" + elem_name + "' onclick='visibility_toggle(\"" + div_id + "\")' style=\"color:blue;\"><u>" + elem_name + "</u> <img height=100 width=100 src="+ elem_img + "></br></div>";
                     document.getElementById("Data").innerHTML += "<div id=\"" + div_id + "\"></div>";
                     document.getElementById(div_id).style.display = "none";
                     // Write detailed data for the elem
